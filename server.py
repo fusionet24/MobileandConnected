@@ -4,7 +4,6 @@ import tornado.web#import web
 import sqlite3#import sql lite
 import sys#import system
 ############################################################################################################################################
-
 _db = sqlite3.connect('sensor.db')#connect to sensor database
 portnumber = 30002#portnumber
 _cursor = _db.cursor()#database cursor
@@ -29,18 +28,11 @@ class sensorRequestHandler(tornado.web.RequestHandler):
                         records = [] #new records array
                         for row in _cursor:#For loop for cursor
                                 records = {'ID':row[0],'temp':row[1],'time':row[2]}# get each record in request
-                        self.write(tornado.escape.json_encode(records))# write out json to cllient
+                        self.write(tornado.escape.json_encode(records))# write out json to client
                         print('GET REQUEST from '+ self.request.remote_ip)# Show Connection from user IP 
                 except:
                         print('ERROR')
-#       def get(self,ID):
-#               range = self.get_argument("range",default="0,"+str(sys.maxint)).spilt(',')
-#               params = [ID]+range
-#               _cursor.execute("SELECT * FROM data WHERE ID=? AND time>=? AND time<=?", params)
-#               records = []
-#               for row in _cursor:
-#                       records = {'ID':row[0],'value':row[1],'time':row[2]}
-#               self.write(tornado.escape.json_encode(records))
+                        self.write('Error')
 ###############PUT###########################################################################################################################
         def put(self,ID):
                 try:
@@ -63,5 +55,3 @@ if __name__ == "__main__":#Main function
         http_server.listen(portnumber)
         print('RESTFUL TEMPERATURE PI Sensor SERVER RUNNING')
         tornado.ioloop.IOLoop.instance().start()
-
-
